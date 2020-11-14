@@ -26,7 +26,7 @@ resource "google_compute_router_nat" "egress_nat_region1" {
   nat_ip_allocate_option             = "MANUAL_ONLY"
   nat_ips                            = google_compute_address.nat_external_addresses_region1.*.self_link
   source_subnetwork_ip_ranges_to_nat = "ALL_SUBNETWORKS_ALL_IP_RANGES"
-  
+
   log_config {
     filter = "TRANSLATIONS_ONLY"
     enable = true

@@ -43,6 +43,6 @@ output "subnets_secondary_ranges" {
   description = "The secondary ranges associated with these subnets"
 }
 
-output "nat_ips" {
-  value       = google_compute_address.nat_external_addresses_region1.*.self_link
+output "reserved_peering_ranges" {
+  value       = google_compute_global_address.private_service_access_address.name
 }
