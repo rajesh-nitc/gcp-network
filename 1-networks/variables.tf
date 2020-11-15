@@ -51,8 +51,13 @@ variable "project_services" {
   type = list
 
   default = [
-    "servicenetworking.googleapis.com"
+    "servicenetworking.googleapis.com",
+    "sqladmin.googleapis.com",
+    "compute.googleapis.com",
+    "cloudresourcemanager.googleapis.com"
   ]
+}
 
-  description = ""
+variable "shared_vpc_host" {
+    type = bool
 }

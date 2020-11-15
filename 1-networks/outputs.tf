@@ -46,3 +46,9 @@ output "subnets_secondary_ranges" {
 output "reserved_peering_ranges" {
   value       = google_compute_global_address.private_service_access_address.name
 }
+
+output "generated_user_password" {
+  description = "The auto generated default user password if no input password was provided"
+  value       = module.mysql_db.generated_user_password
+  sensitive   = false
+}

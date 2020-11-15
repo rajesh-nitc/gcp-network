@@ -10,7 +10,7 @@ module "main" {
   version                                = "~> 2.0"
   project_id                             = var.project_id
   network_name                           = local.network_name
-  shared_vpc_host                        = false
+  shared_vpc_host                        = var.shared_vpc_host
   delete_default_internet_gateway_routes = true
 
   subnets = [
