@@ -71,3 +71,20 @@ resource "google_compute_firewall" "allow_lb" {
 
   target_tags = ["allow-lb"]
 }
+
+resource "google_compute_firewall" "allow_onprem" {
+  name    = "fw-${var.environment_code}-base-1000-i-a-all-allow-onprem"
+  network = module.main.network_name
+  project = var.project_id
+
+  allow {
+    protocol = "icmp"
+  }
+
+  allow {
+    protocol = "tcp"
+    ports    = ["80", "8080", "443", "22"]
+  }
+
+  source_ranges = [var.onprem_default_region1_subnet_cidr]
+}

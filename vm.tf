@@ -8,7 +8,7 @@ module "instance_template" {
     email  = google_service_account.instance_sa.email
     scopes = ["cloud-platform"]
   }
-  startup_script = "sudo yum -yq install httpd && sudo systemctl enable httpd && sudo systemctl start httpd"
+  startup_script = "sudo yum -yq install httpd bind-utils && sudo systemctl enable httpd && sudo systemctl start httpd"
   tags           = ["allow-iap-ssh", "allow-google-apis", "egress-internet"]
 }
 
@@ -17,7 +17,7 @@ module "compute_instance" {
   region            = var.default_region1
   subnetwork        = element(module.main.subnets_self_links, 0)
   num_instances     = 1
-  hostname          = "test-instance-${var.environment_code}"
+  hostname          = "vm-${var.environment_code}"
   instance_template = module.instance_template.self_link
 }
 

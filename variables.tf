@@ -6,6 +6,10 @@ variable "project_id" {
     type = string
 }
 
+variable "onprem_project_id" {
+    type = string
+}
+
 variable "default_region1" {
     type = string
 }
@@ -47,17 +51,10 @@ variable "service_account_name" {
     default = "test-instance-sa"
 }
 
-variable "project_services" {
-  type = list
-
-  default = [
-    "servicenetworking.googleapis.com",
-    "sqladmin.googleapis.com",
-    "compute.googleapis.com",
-    "cloudresourcemanager.googleapis.com"
-  ]
-}
-
 variable "shared_vpc_host" {
     type = bool
+}
+
+variable "onprem_default_region1_subnet_cidr" {
+    type = string
 }

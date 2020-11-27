@@ -1,7 +1,5 @@
-# define all filenames and extensions that must retain CRLF line endings
 *.ps1 text eol=crlf
 *.txt text eol=crlf
-# define all filenames and extensions that must retain LF line endings
 *.gitignore text eol=lf
 *.tf text eol=lf
 *.tfvars text eol=lf
@@ -13,7 +11,6 @@ go.mod text eol=lf
 *.md text eol=lf
 *.rb text eol=lf
 *.py text eol=lf
-# binary files
 *.gz  binary
 *.ico binary
 *.jpg binary

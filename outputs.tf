@@ -43,12 +43,18 @@ output "subnets_secondary_ranges" {
   description = "The secondary ranges associated with these subnets"
 }
 
-output "reserved_peering_ranges" {
-  value       = google_compute_global_address.private_service_access_address.name
-}
+# output "reserved_peering_ranges" {
+#   value       = google_compute_global_address.private_service_access_address.name
+# }
 
-output "generated_user_password" {
-  description = "The auto generated default user password if no input password was provided"
-  value       = module.mysql_db.generated_user_password
-  sensitive   = false
+# output "generated_user_password" {
+#   description = "The auto generated default user password if no input password was provided"
+#   value       = module.mysql_db.generated_user_password
+#   sensitive   = false
+# }
+
+
+output "tunnel_self_links" {
+  value = module.vpn_ha-2.tunnel_self_links
+
 }
