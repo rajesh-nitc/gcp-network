@@ -17,7 +17,7 @@ module "compute_instance" {
   region            = var.default_region1
   subnetwork        = element(module.main.subnets_self_links, 0)
   num_instances     = 1
-  hostname          = "vm-${var.environment_code}"
+  hostname          = "test-${var.environment_code}"
   instance_template = module.instance_template.self_link
 }
 

@@ -1,8 +1,10 @@
 locals {
-  vpc_name                = "${var.environment_code}-base"
-  network_name            = "vpc-${local.vpc_name}"
-  private_googleapis_cidr = "199.36.153.8/30"
-  private_service_cidr    = "10.0.176.0/20"
+  vpc_name                 = "${var.environment_code}-base"
+  network_name             = "vpc-${local.vpc_name}"
+  private_googleapis_cidr  = "199.36.153.8/30"
+  private_service_cidr     = "10.0.176.0/20"
+  # split_instance_self_link = split("/", element(module.compute_instance_onprem_proxy.instances_self_links, 0))
+  # instance_name            = element(local.split_instance_self_link, length(local.split_instance_self_link) - 1)
 }
 
 module "main" {

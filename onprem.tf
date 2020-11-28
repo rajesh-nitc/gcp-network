@@ -16,6 +16,24 @@ module "vpc_onprem" {
     }
   ]
 
+  # routes = [
+  #   {
+  #     name              = "egress-internet"
+  #     description       = "route through IGW to access internet"
+  #     destination_range = "0.0.0.0/0"
+  #     tags              = "proxy"
+  #     next_hop_internet = "true"
+  #     priority          = "100"
+  #   },
+  #   {
+  #     name                   = "through-proxy"
+  #     description            = "route through proxy"
+  #     destination_range      = "0.0.0.0/0"
+  #     next_hop_instance      = local.instance_name
+  #     next_hop_instance_zone = "us-central1-a"
+  #   },
+  # ]
+
 }
 
 # onprem router
@@ -116,7 +134,7 @@ resource "google_dns_policy" "default_policy_onprem" {
   }
 }
 
-# onprem vm
+# onprem test vm
 module "instance_template_onprem" {
   source             = "git@github.com:terraform-google-modules/terraform-google-vm.git//modules/instance_template?ref=v5.1.0"
   region             = var.default_region1
@@ -135,7 +153,7 @@ module "compute_instance_onprem" {
   region            = var.default_region1
   subnetwork        = element(module.vpc_onprem.subnets_self_links, 0)
   num_instances     = 1
-  hostname          = "vm-onprem"
+  hostname          = "test"
   instance_template = module.instance_template_onprem.self_link
 }
 
@@ -157,3 +175,56 @@ resource "google_project_iam_member" "instance_roles_on_gcp" {
   role    = "roles/owner"
   member  = "serviceAccount:${google_service_account.instance_sa_onprem.email}"
 }
+
+# onprem proxy vm
+# module "instance_template_onprem_proxy" {
+#   source             = "git@github.com:terraform-google-modules/terraform-google-vm.git//modules/instance_template?ref=v5.1.0"
+#   region             = var.default_region1
+#   project_id         = var.onprem_project_id
+#   subnetwork         = element(module.vpc_onprem.subnets_self_links, 0)
+#   enable_shielded_vm = false
+#   can_ip_forward     = true
+#   service_account = {
+#     email  = google_service_account.instance_sa_onprem.email
+#     scopes = ["cloud-platform"]
+#   }
+#   startup_script = "iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE; sysctl -w net.ipv4.ip_forward=1"
+
+#   tags = ["allow-iap-ssh", "proxy"]
+# }
+
+# module "compute_instance_onprem_proxy" {
+#   source            = "git@github.com:terraform-google-modules/terraform-google-vm.git//modules/compute_instance?ref=v5.1.0"
+#   region            = var.default_region1
+#   subnetwork        = element(module.vpc_onprem.subnets_self_links, 0)
+#   num_instances     = 1
+#   hostname          = "proxy"
+#   instance_template = module.instance_template_onprem.self_link
+#   access_config = [
+#     {
+#       nat_ip       = google_compute_address.onprem_proxy_ip.address
+#       network_tier = "PREMIUM"
+#     }
+#   ]
+# }
+
+# resource "google_compute_address" "onprem_proxy_ip" {
+#   address_type = "EXTERNAL"
+#   name         = "onprem-proxy-ip"
+#   network_tier = "PREMIUM"
+#   project      = var.onprem_project_id
+#   region       = var.default_region1
+# }
+
+# resource "google_service_account" "instance_sa_onprem_proxy" {
+#   project      = var.onprem_project_id
+#   account_id   = "compute-sa-onprem-proxy"
+#   display_name = "Service Account for Proxy Instance Onprem"
+# }
+
+# resource "google_project_iam_member" "instance_roles_onprem_proxy" {
+#   for_each = toset(var.service_account_roles)
+#   project  = var.onprem_project_id
+#   role     = each.key
+#   member   = "serviceAccount:${google_service_account.instance_sa_onprem_proxy.email}"
+# }
