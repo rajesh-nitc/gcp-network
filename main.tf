@@ -3,8 +3,6 @@ locals {
   network_name             = "vpc-${local.vpc_name}"
   private_googleapis_cidr  = "199.36.153.8/30"
   private_service_cidr     = "10.0.176.0/20"
-  # split_instance_self_link = split("/", element(module.compute_instance_onprem_proxy.instances_self_links, 0))
-  # instance_name            = element(local.split_instance_self_link, length(local.split_instance_self_link) - 1)
 }
 
 module "main" {
@@ -12,7 +10,7 @@ module "main" {
   version                                = "~> 2.0"
   project_id                             = var.project_id
   network_name                           = local.network_name
-  shared_vpc_host                        = var.shared_vpc_host
+  shared_vpc_host                        = var.enable_shared_vpc
   delete_default_internet_gateway_routes = true
 
   subnets = [
@@ -50,17 +48,17 @@ module "main" {
       name              = "rt-${local.vpc_name}-1000-all-default-private-api"
       description       = "Route through IGW to allow private google api access."
       destination_range = local.private_googleapis_cidr
-      next_hop_internet = "true"
+      next_hop_internet = true
       priority          = "1000"
     }],
-    var.nat_enabled ?
+    var.enable_nat ?
     [
       {
         name              = "rt-${local.vpc_name}-1000-egress-internet-default"
         description       = "Tag based route through IGW to access internet"
         destination_range = "0.0.0.0/0"
         tags              = "egress-internet"
-        next_hop_internet = "true"
+        next_hop_internet = true
         priority          = "1000"
       }
     ]
@@ -70,7 +68,7 @@ module "main" {
       name              = "rt-${local.vpc_name}-1000-all-default-windows-kms"
       description       = "Route through IGW to allow Windows KMS activation for GCP."
       destination_range = "35.190.247.13/32"
-      next_hop_internet = "true"
+      next_hop_internet = true
       priority          = "1000"
       }
     ]

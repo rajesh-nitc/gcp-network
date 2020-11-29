@@ -3,7 +3,7 @@ module "vpc_onprem" {
   version                                = "~> 2.0"
   project_id                             = var.onprem_project_id
   network_name                           = "vpc-onprem"
-  shared_vpc_host                        = var.shared_vpc_host
+  shared_vpc_host                        = var.enable_shared_vpc
   delete_default_internet_gateway_routes = true
 
   subnets = [
@@ -16,23 +16,23 @@ module "vpc_onprem" {
     }
   ]
 
-  # routes = [
-  #   {
-  #     name              = "egress-internet"
-  #     description       = "route through IGW to access internet"
-  #     destination_range = "0.0.0.0/0"
-  #     tags              = "proxy"
-  #     next_hop_internet = "true"
-  #     priority          = "100"
-  #   },
-  #   {
-  #     name                   = "through-proxy"
-  #     description            = "route through proxy"
-  #     destination_range      = "0.0.0.0/0"
-  #     next_hop_instance      = local.instance_name
-  #     next_hop_instance_zone = "us-central1-a"
-  #   },
-  # ]
+  routes = [
+    {
+      name              = "default-for-forward-proxy"
+      description       = "route through IGW to access internet"
+      destination_range = "0.0.0.0/0"
+      tags              = "rtag-forward-proxy"
+      next_hop_internet = true
+      priority          = "100"
+    },
+    {
+      name                   = "default-for-all"
+      description            = "route through proxy"
+      destination_range      = "0.0.0.0/0"
+      next_hop_instance      = google_compute_instance.forward_proxy_instance.name
+      next_hop_instance_zone = "${var.default_region1}-a"
+    }
+  ]
 
 }
 
@@ -63,6 +63,19 @@ resource "google_compute_firewall" "allow_iap_ssh_onprem" {
   }
 
   target_tags = ["allow-iap-ssh"]
+}
+
+resource "google_compute_firewall" "allow_internal" {
+  name          = "fw-onprem-allow-internal"
+  network       = module.vpc_onprem.network_name
+  project       = var.onprem_project_id
+  source_ranges = [var.onprem_default_region1_subnet_cidr]
+
+  allow {
+    protocol = "all"
+  }
+
+  target_tags = ["ntag-forward-proxy"]
 }
 
 # onprem dns
@@ -172,59 +185,52 @@ resource "google_project_iam_member" "instance_roles_onprem" {
 
 resource "google_project_iam_member" "instance_roles_on_gcp" {
   project = var.project_id
-  role    = "roles/owner"
+  role    = "roles/compute.admin"
   member  = "serviceAccount:${google_service_account.instance_sa_onprem.email}"
 }
 
-# onprem proxy vm
-# module "instance_template_onprem_proxy" {
-#   source             = "git@github.com:terraform-google-modules/terraform-google-vm.git//modules/instance_template?ref=v5.1.0"
-#   region             = var.default_region1
-#   project_id         = var.onprem_project_id
-#   subnetwork         = element(module.vpc_onprem.subnets_self_links, 0)
-#   enable_shielded_vm = false
-#   can_ip_forward     = true
-#   service_account = {
-#     email  = google_service_account.instance_sa_onprem.email
-#     scopes = ["cloud-platform"]
-#   }
-#   startup_script = "iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE; sysctl -w net.ipv4.ip_forward=1"
+# onprem forward proxy vm
+resource "google_compute_instance" "forward_proxy_instance" {
+  boot_disk {
+    auto_delete = true
+    device_name = "forward-proxy-instance"
 
-#   tags = ["allow-iap-ssh", "proxy"]
-# }
+    initialize_params {
+      image = "https://www.googleapis.com/compute/v1/projects/debian-cloud/global/images/debian-9-stretch-v20190423"
+      size  = "10"
+      type  = "pd-standard"
+    }
+  }
 
-# module "compute_instance_onprem_proxy" {
-#   source            = "git@github.com:terraform-google-modules/terraform-google-vm.git//modules/compute_instance?ref=v5.1.0"
-#   region            = var.default_region1
-#   subnetwork        = element(module.vpc_onprem.subnets_self_links, 0)
-#   num_instances     = 1
-#   hostname          = "proxy"
-#   instance_template = module.instance_template_onprem.self_link
-#   access_config = [
-#     {
-#       nat_ip       = google_compute_address.onprem_proxy_ip.address
-#       network_tier = "PREMIUM"
-#     }
-#   ]
-# }
+  can_ip_forward      = true
+  deletion_protection = false
+  labels              = {}
+  machine_type        = "n1-standard-1"
+  metadata            = {}
+  name                = "forward-proxy-instance"
 
-# resource "google_compute_address" "onprem_proxy_ip" {
-#   address_type = "EXTERNAL"
-#   name         = "onprem-proxy-ip"
-#   network_tier = "PREMIUM"
-#   project      = var.onprem_project_id
-#   region       = var.default_region1
-# }
+  network_interface {
+    access_config {
+      network_tier = "PREMIUM"
+    }
 
-# resource "google_service_account" "instance_sa_onprem_proxy" {
-#   project      = var.onprem_project_id
-#   account_id   = "compute-sa-onprem-proxy"
-#   display_name = "Service Account for Proxy Instance Onprem"
-# }
+    network    = module.vpc_onprem.network_self_link
+    subnetwork = element(module.vpc_onprem.subnets_self_links, 0)
+  }
 
-# resource "google_project_iam_member" "instance_roles_onprem_proxy" {
-#   for_each = toset(var.service_account_roles)
-#   project  = var.onprem_project_id
-#   role     = each.key
-#   member   = "serviceAccount:${google_service_account.instance_sa_onprem_proxy.email}"
-# }
+  project                 = var.onprem_project_id
+  metadata_startup_script = "iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE; sysctl -w net.ipv4.ip_forward=1"
+
+  service_account {
+    scopes = ["https://www.googleapis.com/auth/cloud-platform"]
+  }
+
+  scheduling {
+    automatic_restart   = true
+    on_host_maintenance = "MIGRATE"
+    preemptible         = false
+  }
+
+  tags = ["rtag-forward-proxy", "ntag-forward-proxy", "allow-iap-ssh"]
+  zone = "${var.default_region1}-a"
+}

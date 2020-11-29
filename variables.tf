@@ -18,9 +18,8 @@ variable "default_region2" {
     type = string
 }
 
-variable "nat_enabled" {
+variable "enable_nat" {
     type = string
-    default = true
 }
 
 variable "windows_activation_enabled" {
@@ -51,7 +50,7 @@ variable "service_account_name" {
     default = "test-instance-sa"
 }
 
-variable "shared_vpc_host" {
+variable "enable_shared_vpc" {
     type = bool
 }
 
