@@ -1,3 +1,15 @@
+# Default DNS Policy.
+resource "google_dns_policy" "default_policy" {
+  project                   = var.project_id
+  name                      = "dp-${var.environment_code}-base-default-policy"
+  enable_inbound_forwarding = var.dns_enable_inbound_forwarding
+  enable_logging            = var.dns_enable_logging
+  networks {
+    network_url = module.main.network_self_link
+  }
+}
+
+# Private Google APIs DNS Zone & records.
 module "private_googleapis" {
   source      = "terraform-google-modules/cloud-dns/google"
   version     = "~> 3.0"
@@ -27,6 +39,7 @@ module "private_googleapis" {
   ]
 }
 
+# Private GCR DNS Zone & records.
 module "base_gcr" {
   source      = "terraform-google-modules/cloud-dns/google"
   version     = "~> 3.0"
@@ -54,14 +67,4 @@ module "base_gcr" {
       records = ["199.36.153.8", "199.36.153.9", "199.36.153.10", "199.36.153.11"]
     },
   ]
-}
-
-resource "google_dns_policy" "default_policy" {
-  project                   = var.project_id
-  name                      = "dp-${var.environment_code}-base-default-policy"
-  enable_inbound_forwarding = true
-  enable_logging            = true
-  networks {
-    network_url = module.main.network_self_link
-  }
 }

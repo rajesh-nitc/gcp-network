@@ -1,3 +1,4 @@
+# NAT Cloud Router & NAT config
 resource "google_compute_router" "nat_router_region1" {
   count   = var.enable_nat ? 1 : 0
   name    = "cr-${local.vpc_name}-${var.default_region1}-nat-router"
@@ -6,7 +7,7 @@ resource "google_compute_router" "nat_router_region1" {
   network = module.main.network_self_link
 
   bgp {
-    asn = 64514
+    asn = var.nat_bgp_asn
   }
 }
 

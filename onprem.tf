@@ -166,7 +166,7 @@ module "compute_instance_onprem" {
   region            = var.default_region1
   subnetwork        = element(module.vpc_onprem.subnets_self_links, 0)
   num_instances     = 1
-  hostname          = "test"
+  hostname          = "test1"
   instance_template = module.instance_template_onprem.self_link
 }
 

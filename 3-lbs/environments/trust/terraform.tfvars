@@ -1,0 +1,7 @@
+project_id="ngfw-298311"
+backend = "https://www.googleapis.com/compute/v1/projects/ngfw-298311/zones/us-central1-a/instanceGroups/umig-vmseries"
+network = "vpc-trust"
+subnet = "sb-trust-us-central1"
+network_self_link = "https://www.googleapis.com/compute/v1/projects/ngfw-298311/global/networks/vpc-trust"
+region = "us-central1"
+terraform_service_account = "sa-to-impersoante@ngfw-298311.iam.gserviceaccount.com"
