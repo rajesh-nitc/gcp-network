@@ -11,8 +11,10 @@ resource "google_compute_firewall" "allow" {
   source_ranges = ["0.0.0.0/0"]
 
   allow {
-    protocol = "tcp"
-    ports    = ["22", "443"]
+    # protocol = "tcp"
+    # ports    = ["22", "443"]
+    protocol = "all"
+    ports    = []
   }
 
   # target_tags = ["ntag-test"]

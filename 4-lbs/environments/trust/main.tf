@@ -1,35 +1,72 @@
+# module "outbound" {
+#   source       = "GoogleCloudPlatform/lb-internal/google"
+#   version      = "~> 2.0"
+#   project      = var.project_id
+#   region       = var.region
+#   name         = "outbound"
+#   network      = var.network
+#   subnetwork   = var.subnet
+#   ip_protocol  = "TCP"
+#   ports        = ["22"]
+#   health_check = var.health_check
+#   source_tags  = []
+#   target_tags  = []
+#   backends = [
+#     { group = var.backend, description = "" },
+#   ]
+# }
+
+# module "eastwest" {
+#   source       = "GoogleCloudPlatform/lb-internal/google"
+#   version      = "~> 2.0"
+#   project      = var.project_id
+#   region       = var.region
+#   name         = "eastwest"
+#   network      = var.network
+#   subnetwork   = var.subnet
+#   ip_protocol  = "TCP"
+#   ports        = ["22"]
+#   health_check = var.health_check
+#   source_tags  = []
+#   target_tags  = []
+#   backends = [
+#     { group = var.backend, description = "" },
+#   ]
+# }
+
 module "outbound" {
-  source       = "GoogleCloudPlatform/lb-internal/google"
-  version      = "~> 2.0"
-  project      = var.project_id
-  region       = var.region
-  name         = "outbound"
-  network      = var.network
-  subnetwork   = var.subnet
-  ports        = ["80"]
-  health_check = var.health_check
-  source_tags  = ["test"]
-  target_tags  = ["test"]
-  backends = [
-    { group = var.backend, description = "" },
-  ]
+  source            = "../../modules/tcp-ilb"
+   project_id      = var.project_id
+   region = var.region
+  name              = "outbound"
+    subnet      = var.subnet
+
+  all_ports         = true
+  ports             = []
+  health_check_port = "22"
+  network           = var.network
+
+  backend = var.backend
+  providers = {
+    google = google-beta
+  }
 }
 
 module "eastwest" {
-  source       = "GoogleCloudPlatform/lb-internal/google"
-  version      = "~> 2.0"
-  project      = var.project_id
-  region       = var.region
-  name         = "eastwest"
-  network      = var.network
-  subnetwork   = var.subnet
-  ports        = ["80"]
-  health_check = var.health_check
-  source_tags  = ["test"]
-  target_tags  = ["test"]
-  backends = [
-    { group = var.backend, description = "" },
-  ]
+  source            = "../../modules/tcp-ilb"
+   project_id      = var.project_id
+   region = var.region
+  name              = "ew"
+  subnet      = var.subnet
+  all_ports         = true
+  ports             = []
+  health_check_port = "22"
+  network           = var.network
+
+   backend = var.backend
+  providers = {
+    google = google-beta
+  }
 }
 
 # Routes will be exported to private vpcs via peering
@@ -51,4 +88,23 @@ resource "google_compute_route" "eastwest" {
   next_hop_ilb = module.eastwest.forwarding_rule
   priority     = 100
   provider     = google-beta
+}
+
+# 
+resource "google_compute_network_peering" "trust_to_spoke1" {
+  name                 = "test1-test2"# "${var.trust_vpc}-to-${var.spoke1_vpc}"
+  provider             = google-beta
+  network              = var.network_self_link
+  peer_network         = "https://www.googleapis.com/compute/v1/projects/ngfw-299010/global/networks/vpc-dev"
+  export_custom_routes = true
+}
+
+resource "google_compute_network_peering" "spoke1_to_trust" {
+  name                 = "test2-test1"#"${var.spoke1_vpc}-to-${var.trust_vpc}"
+  provider             = google-beta
+  network              = "https://www.googleapis.com/compute/v1/projects/ngfw-299010/global/networks/vpc-dev"
+  peer_network         = var.network_self_link
+  import_custom_routes = true
+
+  depends_on = [google_compute_network_peering.trust_to_spoke1]
 }

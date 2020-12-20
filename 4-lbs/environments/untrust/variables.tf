@@ -3,6 +3,14 @@ variable "project_id" {
   description = "Project ID for Private Shared VPC."
 }
 
+variable "region" {
+  type        = string
+}
+
+variable "instances" {
+  type        = list(string)
+}
+
 variable "backend" {
   type        = string
 }
@@ -10,3 +18,4 @@ variable "backend" {
 variable "terraform_service_account" {
   type        = string
 }
+

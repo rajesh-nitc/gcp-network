@@ -15,3 +15,9 @@ module "trust_rules" {
   project_id       = var.project_id
   environment_code = "trust"
 }
+
+module "private_rules" {
+  source           = "../../modules/private-rules"
+  project_id       = var.project_id
+  environment_code = "dev"
+}

@@ -68,8 +68,8 @@ resource "google_compute_instance_group" "vmseries" {
   instances = [google_compute_instance.vmseries.self_link]
 
   named_port {
-    name = "https"
-    port = "443"
+    name = "http"
+    port = "80"
   }
 
   lifecycle {

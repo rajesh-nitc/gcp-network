@@ -25,17 +25,18 @@ variable "region" {
 
 variable "health_check" {
   default = {
-    type                = "http"
+    type                = "tcp"
     check_interval_sec  = 1
     healthy_threshold   = 4
     timeout_sec         = 1
     unhealthy_threshold = 5
     response            = ""
     proxy_header        = "NONE"
-    port                = 80
-    port_name           = "http"
-    request             = ""
-    request_path        = "/"
+    port                = 22
+    port_name           = null
+    request             = null
+    request_path        = null
+    host = null
   }
 }
 
