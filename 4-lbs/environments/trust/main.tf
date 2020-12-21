@@ -1,45 +1,9 @@
-# module "outbound" {
-#   source       = "GoogleCloudPlatform/lb-internal/google"
-#   version      = "~> 2.0"
-#   project      = var.project_id
-#   region       = var.region
-#   name         = "outbound"
-#   network      = var.network
-#   subnetwork   = var.subnet
-#   ip_protocol  = "TCP"
-#   ports        = ["22"]
-#   health_check = var.health_check
-#   source_tags  = []
-#   target_tags  = []
-#   backends = [
-#     { group = var.backend, description = "" },
-#   ]
-# }
-
-# module "eastwest" {
-#   source       = "GoogleCloudPlatform/lb-internal/google"
-#   version      = "~> 2.0"
-#   project      = var.project_id
-#   region       = var.region
-#   name         = "eastwest"
-#   network      = var.network
-#   subnetwork   = var.subnet
-#   ip_protocol  = "TCP"
-#   ports        = ["22"]
-#   health_check = var.health_check
-#   source_tags  = []
-#   target_tags  = []
-#   backends = [
-#     { group = var.backend, description = "" },
-#   ]
-# }
-
 module "outbound" {
-  source            = "../../modules/tcp-ilb"
-   project_id      = var.project_id
-   region = var.region
-  name              = "outbound"
-    subnet      = var.subnet
+  source     = "../../modules/tcp-ilb"
+  project_id = var.project_id
+  region     = var.region
+  name       = "outbound"
+  subnet     = var.subnet
 
   all_ports         = true
   ports             = []
@@ -54,16 +18,16 @@ module "outbound" {
 
 module "eastwest" {
   source            = "../../modules/tcp-ilb"
-   project_id      = var.project_id
-   region = var.region
+  project_id        = var.project_id
+  region            = var.region
   name              = "ew"
-  subnet      = var.subnet
+  subnet            = var.subnet
   all_ports         = true
   ports             = []
   health_check_port = "22"
   network           = var.network
 
-   backend = var.backend
+  backend = var.backend
   providers = {
     google = google-beta
   }
@@ -92,7 +56,7 @@ resource "google_compute_route" "eastwest" {
 
 # 
 resource "google_compute_network_peering" "trust_to_spoke1" {
-  name                 = "test1-test2"# "${var.trust_vpc}-to-${var.spoke1_vpc}"
+  name                 = "test1-test2" # "${var.trust_vpc}-to-${var.spoke1_vpc}"
   provider             = google-beta
   network              = var.network_self_link
   peer_network         = "https://www.googleapis.com/compute/v1/projects/ngfw-299010/global/networks/vpc-dev"
@@ -100,7 +64,7 @@ resource "google_compute_network_peering" "trust_to_spoke1" {
 }
 
 resource "google_compute_network_peering" "spoke1_to_trust" {
-  name                 = "test2-test1"#"${var.spoke1_vpc}-to-${var.trust_vpc}"
+  name                 = "test2-test1" #"${var.spoke1_vpc}-to-${var.trust_vpc}"
   provider             = google-beta
   network              = "https://www.googleapis.com/compute/v1/projects/ngfw-299010/global/networks/vpc-dev"
   peer_network         = var.network_self_link

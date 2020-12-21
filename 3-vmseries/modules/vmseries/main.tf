@@ -5,7 +5,7 @@ resource "null_resource" "dependency_getter" {
 }
 
 resource "google_compute_instance" "vmseries" {
-  name                      = "vmseries"
+  name                      = "vmseries1"
   project                   = var.project_id
   machine_type              = var.machine_type
   zone                      = "${var.region}-a"

@@ -333,7 +333,7 @@
                       <unicast/>
                     </route-table>
                   </entry>
-                  <entry name="spoke1-vpc">
+                  <entry name="vpc-dev">
                     <path-monitor>
                       <enable>no</enable>
                       <failure-condition>any</failure-condition>
@@ -589,11 +589,11 @@
                     <member>trust</member>
                   </from>
                   <source>
-                    <member>spoke1-vpc</member>
+                    <member>vpc-dev</member>
                     <member>spoke2-vpc</member>
                   </source>
                   <destination>
-                    <member>spoke1-vpc</member>
+                    <member>vpc-dev</member>
                     <member>spoke2-vpc</member>
                   </destination>
                   <source-user>
@@ -855,7 +855,7 @@
                 <member>gcp-resource</member>
               </tag>
             </entry>
-            <entry name="spoke1-vpc">
+            <entry name="vpc-dev">
               <ip-netmask>10.1.0.0/24</ip-netmask>
               <tag>
                 <member>gcp-resource</member>
