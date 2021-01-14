@@ -4,23 +4,23 @@ variable "project_id" {
 }
 
 variable "backend" {
-  type        = string
+  type = string
 }
 
 variable "network" {
-  type        = string
+  type = string
 }
 
 variable "network_self_link" {
-  type        = string
+  type = string
 }
 
 variable "subnet" {
-  type        = string
+  type = string
 }
 
 variable "region" {
-  type        = string
+  type = string
 }
 
 variable "health_check" {
@@ -36,10 +36,10 @@ variable "health_check" {
     port_name           = null
     request             = null
     request_path        = null
-    host = null
+    host                = null
   }
 }
 
 variable "terraform_service_account" {
-  type        = string
+  type = string
 }

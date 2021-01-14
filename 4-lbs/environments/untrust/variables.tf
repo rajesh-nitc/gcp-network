@@ -4,18 +4,18 @@ variable "project_id" {
 }
 
 variable "region" {
-  type        = string
+  type = string
 }
 
 variable "instances" {
-  type        = list(string)
+  type = list(string)
 }
 
 variable "backend" {
-  type        = string
+  type = string
 }
 
 variable "terraform_service_account" {
-  type        = string
+  type = string
 }
 

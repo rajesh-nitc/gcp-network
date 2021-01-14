@@ -11,8 +11,8 @@ variable "service_account_roles" {
 }
 
 variable "service_account_name" {
-    type = string
-    default = "test-instance-sa"
+  type    = string
+  default = "test-instance-sa"
 }
 
 variable "health_check" {
@@ -28,7 +28,7 @@ variable "health_check" {
     port_name           = null
     request             = null
     request_path        = null
-    host = null
+    host                = null
   }
 }
 
@@ -38,17 +38,17 @@ variable "project_id" {
 }
 
 variable "region" {
-  type        = string
+  type = string
 }
 
 variable "subnet" {
-  type        = string
+  type = string
 }
 
 variable "network" {
-  type        = string
+  type = string
 }
 
 variable "terraform_service_account" {
-  type        = string
+  type = string
 }

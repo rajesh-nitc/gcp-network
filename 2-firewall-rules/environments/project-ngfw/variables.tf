@@ -4,5 +4,5 @@ variable "project_id" {
 }
 
 variable "terraform_service_account" {
-  type        = string
+  type = string
 }
