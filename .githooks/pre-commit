@@ -8,6 +8,7 @@ for repo in ${repos[*]}
 do
     pushd "$repo"
     terraform fmt
+    terraform-docs markdown table . > README.md
     popd
 done
 
