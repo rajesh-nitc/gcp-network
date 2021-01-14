@@ -48,3 +48,7 @@ variable "subnet" {
 variable "network" {
   type        = string
 }
+
+variable "terraform_service_account" {
+  type        = string
+}

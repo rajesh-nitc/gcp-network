@@ -26,6 +26,7 @@ module "management" {
   enable_nat                             = false
   enable_shared_vpc                      = false
   delete_default_internet_gateway_routes = false
+  enable_private                         = false
 
   subnets = [
     {
@@ -46,6 +47,7 @@ module "trust" {
   enable_nat                             = false
   enable_shared_vpc                      = false
   delete_default_internet_gateway_routes = true
+  enable_private                         = false
 
   subnets = [
     {
@@ -66,6 +68,7 @@ module "dev" {
   enable_nat                             = false
   enable_shared_vpc                      = false
   delete_default_internet_gateway_routes = true
+  enable_private                         = false
 
   subnets = [
     {

@@ -59,14 +59,14 @@ resource "google_compute_network_peering" "trust_to_spoke1" {
   name                 = "test1-test2" # "${var.trust_vpc}-to-${var.spoke1_vpc}"
   provider             = google-beta
   network              = var.network_self_link
-  peer_network         = "https://www.googleapis.com/compute/v1/projects/ngfw-299010/global/networks/vpc-dev"
+  peer_network         = "https://www.googleapis.com/compute/v1/projects/ngfw1-301708/global/networks/vpc-dev"
   export_custom_routes = true
 }
 
 resource "google_compute_network_peering" "spoke1_to_trust" {
   name                 = "test2-test1" #"${var.spoke1_vpc}-to-${var.trust_vpc}"
   provider             = google-beta
-  network              = "https://www.googleapis.com/compute/v1/projects/ngfw-299010/global/networks/vpc-dev"
+  network              = "https://www.googleapis.com/compute/v1/projects/ngfw1-301708/global/networks/vpc-dev"
   peer_network         = var.network_self_link
   import_custom_routes = true
 

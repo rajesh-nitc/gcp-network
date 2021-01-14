@@ -1,5 +1,5 @@
 locals {
-  vpc_name                = "${var.environment_code}"
+  vpc_name                = var.environment_code
   network_name            = "vpc-${local.vpc_name}"
   private_googleapis_cidr = "199.36.153.8/30"
 }

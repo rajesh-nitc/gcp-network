@@ -110,6 +110,7 @@ module "ilb_app1" {
   ports             = []
   health_check_port = "80"
   network           = var.network
+  ip_address = "10.1.0.100"
 
   backend = google_compute_instance_group.umig.self_link
   providers = {
