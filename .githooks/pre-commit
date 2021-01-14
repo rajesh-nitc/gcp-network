@@ -1,4 +1,13 @@
 #!/bin/bash
 
+set -xe
 echo "Running pre commit git hook"
-terraform fmt
+
+repos=(1-networks/environments/project* 2-firewall-rules/environments/project* 3-vmseries/environments/project* 4-lbs/environments/trust 4-lbs/environments/untrust 5-app1/environments/dev)
+for repo in ${repos[*]}
+do
+    pushd "$repo"
+    terraform fmt
+    popd
+done
+

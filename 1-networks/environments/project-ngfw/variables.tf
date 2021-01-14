@@ -1,31 +1,31 @@
 variable "project_id" {
-  type        = string
+  type = string
 }
 
 variable "subnet_untrust" {
-  type        = string
+  type = string
 }
 
 variable "subnet_trust" {
-  type        = string
+  type = string
 }
 
 variable "subnet_mgmt" {
-  type        = string
+  type = string
 }
 
 variable "subnet_dev" {
-  type        = string
+  type = string
 }
 
 variable "private_dev" {
-  type        = string
+  type = string
 }
 
 variable "region" {
-  type        = string
+  type = string
 }
 
 variable "terraform_service_account" {
-  type        = string
+  type = string
 }

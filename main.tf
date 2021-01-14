@@ -1,8 +1,8 @@
 locals {
-  vpc_name                 = "${var.environment_code}-base"
-  network_name             = "vpc-${local.vpc_name}"
-  private_googleapis_cidr  = "199.36.153.8/30"
-  private_service_cidr     = "10.0.176.0/20"
+  vpc_name                = "${var.environment_code}-base"
+  network_name            = "vpc-${local.vpc_name}"
+  private_googleapis_cidr = "199.36.153.8/30"
+  private_service_cidr    = "10.0.176.0/20"
 }
 
 module "main" {

@@ -1,30 +1,30 @@
 variable "environment_code" {
-    type = string
+  type = string
 }
 
 variable "project_id" {
-    type = string
+  type = string
 }
 
 variable "onprem_project_id" {
-    type = string
+  type = string
 }
 
 variable "default_region1" {
-    type = string
+  type = string
 }
 
 variable "default_region2" {
-    type = string
+  type = string
 }
 
 variable "enable_nat" {
-    type = string
+  type = string
 }
 
 variable "windows_activation_enabled" {
-    type = string
-    default = true
+  type    = string
+  default = true
 }
 
 variable "nat_num_addresses_region1" {
@@ -46,14 +46,14 @@ variable "service_account_roles" {
 }
 
 variable "service_account_name" {
-    type = string
-    default = "test-instance-sa"
+  type    = string
+  default = "test-instance-sa"
 }
 
 variable "enable_shared_vpc" {
-    type = bool
+  type = bool
 }
 
 variable "onprem_default_region1_subnet_cidr" {
-    type = string
+  type = string
 }
