@@ -11,4 +11,4 @@ do
     terraform-docs markdown table . > README.md
     popd
 done
-
+git add .

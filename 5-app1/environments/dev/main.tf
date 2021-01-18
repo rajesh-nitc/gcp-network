@@ -1,41 +1,3 @@
-# resource "google_compute_address" "ip_address" {
-#   name = "external-ip"
-# }
-
-# locals {
-#   access_config = {
-#     nat_ip       = google_compute_address.ip_address.address
-#     network_tier = "PREMIUM"
-#   }
-# }
-
-# module "instance_template" {
-#   source             = "git@github.com:terraform-google-modules/terraform-google-vm.git//modules/instance_template?ref=v5.1.0"
-#   region             = var.region
-#   project_id         = var.project_id
-#   subnetwork         = var.subnet
-#   # machine_type       = "f1-micro"
-#   enable_shielded_vm = false
-#   can_ip_forward     = true
-#   service_account = {
-#     email  = google_service_account.instance_sa.email
-#     scopes = ["cloud-platform"]
-#   }
-#   startup_script = "sudo yum -yq install httpd bind-utils && sudo systemctl enable httpd && sudo systemctl start httpd"
-#   #   tags           = ["allow-iap-ssh", "allow-google-apis", "egress-internet"]
-#   # access_config   = [local.access_config]
-# }
-
-# module "compute_instance" {
-#   source = "git@github.com:terraform-google-modules/terraform-google-vm.git//modules/compute_instance?ref=v5.1.0"
-#   # project      = var.project_id
-#   region            = var.region
-#   subnetwork        = var.subnet
-#   num_instances     = 1
-#   hostname          = "app2"
-#   instance_template = module.instance_template.self_link
-# }
-
 resource "google_compute_instance" "default" {
   name                      = "spoke1-vm"
   project                   = var.project_id
@@ -86,19 +48,6 @@ resource "google_compute_instance_group" "umig" {
     create_before_destroy = true
   }
 }
-
-# resource "google_service_account" "instance_sa" {
-#   project      = var.project_id
-#   account_id   = var.service_account_name
-#   display_name = "Service Account for Test Instance"
-# }
-
-# resource "google_project_iam_member" "instance_roles" {
-#   for_each = toset(var.service_account_roles)
-#   project  = var.project_id
-#   role     = each.key
-#   member   = "serviceAccount:${google_service_account.instance_sa.email}"
-# }
 
 module "ilb_app1" {
   source            = "../../../4-lbs/modules/tcp-ilb"
