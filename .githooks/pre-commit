@@ -12,4 +12,3 @@ do
     popd
 done
 git add .
-git commit -m "hook" --no-verify
