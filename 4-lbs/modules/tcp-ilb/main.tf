@@ -15,9 +15,9 @@ resource "google_compute_region_backend_service" "default" {
 
 
   backend {
-    group    = var.backend
+    group          = var.backend
     balancing_mode = "CONNECTION" # internal TCP/UDP load balancers only support the CONNECTION balancing mode
-    failover = false
+    failover       = false
   }
   session_affinity = "NONE"
 }

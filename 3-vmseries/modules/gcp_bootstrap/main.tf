@@ -1,5 +1,5 @@
 locals {
-  bucket_name = join("", [var.bucket_name, random_string.randomstring.result])
+  bucket_name   = join("", [var.bucket_name, random_string.randomstring.result])
   file_location = "${path.module}/bootstrap_files/"
 }
 resource "random_string" "randomstring" {
@@ -16,31 +16,31 @@ resource "google_storage_bucket" "bootstrap" {
 }
 
 resource "google_storage_bucket_object" "config_full" {
-  count   = length(var.config) > 0 ? length(var.config) : "0"
-  name    = "config/${element(var.config, count.index)}"
-  source  = "${local.file_location}${element(var.config, count.index)}"
-  bucket  = google_storage_bucket.bootstrap.name
+  count  = length(var.config) > 0 ? length(var.config) : "0"
+  name   = "config/${element(var.config, count.index)}"
+  source = "${local.file_location}${element(var.config, count.index)}"
+  bucket = google_storage_bucket.bootstrap.name
 }
 
 resource "google_storage_bucket_object" "content_full" {
-  count   = length(var.content) > 0 ? length(var.content) : "0"
-  name    = "content/${element(var.content, count.index)}"
-  source  = "${local.file_location}${element(var.content, count.index)}"
-  bucket  = google_storage_bucket.bootstrap.name
+  count  = length(var.content) > 0 ? length(var.content) : "0"
+  name   = "content/${element(var.content, count.index)}"
+  source = "${local.file_location}${element(var.content, count.index)}"
+  bucket = google_storage_bucket.bootstrap.name
 }
 
 resource "google_storage_bucket_object" "license_full" {
-  count   = length(var.license) > 0 ? length(var.license) : "0"
-  name    = "license/${element(var.license, count.index)}"
-  source  = "${local.file_location}${element(var.license, count.index)}"
-  bucket  = google_storage_bucket.bootstrap.name
+  count  = length(var.license) > 0 ? length(var.license) : "0"
+  name   = "license/${element(var.license, count.index)}"
+  source = "${local.file_location}${element(var.license, count.index)}"
+  bucket = google_storage_bucket.bootstrap.name
 }
 
 resource "google_storage_bucket_object" "software_full" {
-  count   = length(var.software) > 0 ? length(var.software) : "0"
-  name    = "software/${element(var.software, count.index)}"
-  source  = "${local.file_location}${element(var.software, count.index)}"
-  bucket  = google_storage_bucket.bootstrap.name
+  count  = length(var.software) > 0 ? length(var.software) : "0"
+  name   = "software/${element(var.software, count.index)}"
+  source = "${local.file_location}${element(var.software, count.index)}"
+  bucket = google_storage_bucket.bootstrap.name
 }
 
 resource "google_storage_bucket_object" "config_empty" {

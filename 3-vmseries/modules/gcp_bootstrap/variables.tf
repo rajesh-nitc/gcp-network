@@ -1,25 +1,25 @@
-variable bucket_name {
+variable "bucket_name" {
 }
 
 # variable file_location {
 # }
 
-variable config {
+variable "config" {
   type    = list(string)
   default = []
 }
 
-variable content {
+variable "content" {
   type    = list(string)
   default = []
 }
 
-variable license {
+variable "license" {
   type    = list(string)
   default = []
 }
 
-variable software {
+variable "software" {
   default = []
 }
 

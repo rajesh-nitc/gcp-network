@@ -1,26 +1,26 @@
-variable subnetworks {
+variable "subnetworks" {
   type = list(string)
 }
 
-variable machine_type {
+variable "machine_type" {
 }
 
-variable cpu_platform {
+variable "cpu_platform" {
   default = "Intel Broadwell"
 }
-variable disk_type {
+variable "disk_type" {
   default = "pd-ssd"
   #default = "pd-standard"
 }
-variable bootstrap_bucket {
+variable "bootstrap_bucket" {
   default = ""
 }
 
-variable public_lb_create {
+variable "public_lb_create" {
   default = false
 }
 
-variable scopes {
+variable "scopes" {
   type = list(string)
 
   default = [
@@ -32,49 +32,49 @@ variable scopes {
   ]
 }
 
-variable image {
+variable "image" {
 }
 
-variable tags {
+variable "tags" {
   type    = list(string)
   default = []
 }
 
-variable dependencies {
+variable "dependencies" {
   type    = list(string)
   default = []
 }
 
-variable nic0_ip {
+variable "nic0_ip" {
   type    = list(string)
   default = [""]
 }
 
-variable nic1_ip {
+variable "nic1_ip" {
   type    = list(string)
   default = [""]
 }
 
-variable nic2_ip {
+variable "nic2_ip" {
   type    = list(string)
   default = [""]
 }
 
-variable mgmt_interface_swap {
+variable "mgmt_interface_swap" {
   default = ""
 }
 
-variable nic0_public_ip {
+variable "nic0_public_ip" {
   type    = bool
   default = false
 }
 
-variable nic1_public_ip {
+variable "nic1_public_ip" {
   type    = bool
   default = false
 }
 
-variable nic2_public_ip {
+variable "nic2_public_ip" {
   type    = bool
   default = false
 }
@@ -85,5 +85,5 @@ variable "project_id" {
 }
 
 variable "region" {
-  type        = string
+  type = string
 }

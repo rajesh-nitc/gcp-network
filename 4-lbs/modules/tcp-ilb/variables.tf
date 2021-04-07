@@ -1,7 +1,7 @@
-variable name {
+variable "name" {
 }
 
-variable health_check_port {
+variable "health_check_port" {
   default = "22"
 }
 
@@ -17,31 +17,31 @@ variable health_check_port {
 #   type = list(string)
 # }
 
-variable ip_address {
+variable "ip_address" {
   default = null
 }
 
-variable ip_protocol {
+variable "ip_protocol" {
   default = "TCP"
 }
-variable all_ports {
+variable "all_ports" {
   type = bool
 }
-variable ports {
+variable "ports" {
   type    = list(string)
   default = []
 }
 
-variable network {
+variable "network" {
   default = null
 }
 
 variable "subnet" {
-  type        = string
+  type = string
 }
 
 variable "backend" {
-  type        = string
+  type = string
 }
 
 variable "project_id" {
@@ -50,5 +50,5 @@ variable "project_id" {
 }
 
 variable "region" {
-  type        = string
+  type = string
 }
